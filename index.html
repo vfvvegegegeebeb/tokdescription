@@ -325,7 +325,7 @@ async function handleGenerate() {
   btn.disabled=true; btn.innerHTML='<span class="dots">Génération en cours</span>';
   document.getElementById('limitBox').style.display='none';
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch("/api/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ niche, sujet, langue, ton }) });
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
         model:'claude-sonnet-4-20250514', max_tokens:1000,
@@ -333,7 +333,7 @@ async function handleGenerate() {
       })
     });
     const data = await res.json();
-    document.getElementById('resultText').textContent = data.content[0].text;
+    document.getElementById("resultText").textContent = data.result;
     document.getElementById('result').classList.add('show');
     gensToday++;
     const today = new Date().toISOString().split('T')[0];
