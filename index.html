@@ -325,15 +325,12 @@ async function handleGenerate() {
   btn.disabled=true; btn.innerHTML='<span class="dots">Génération en cours</span>';
   document.getElementById('limitBox').style.display='none';
   try {
-    const res = await fetch("/api/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ niche, sujet, langue, ton }) });
+    const res = await fetch('/api/generate', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514', max_tokens:1000,
-        messages:[{ role:'user', content:`Tu es un expert en croissance TikTok. Génère une description TikTok optimisée en ${langue} pour une vidéo de niche "${niche}" sur le sujet "${sujet}" avec un ton "${ton}".\n\nFormat exact :\n\n📝 DESCRIPTION :\n[2-3 phrases accrocheuses]\n\n#️⃣ HASHTAGS :\n[10-15 hashtags ciblés]\n\n⏰ HEURE DE POST IDÉALE :\n[heure + explication]\n\n💡 CONSEIL :\n[1 conseil actionnable]` }]
-      })
+      body: JSON.stringify({ niche, sujet, langue, ton })
     });
     const data = await res.json();
-    document.getElementById("resultText").textContent = data.result;
+    document.getElementById('resultText').textContent = data.result;
     document.getElementById('result').classList.add('show');
     gensToday++;
     const today = new Date().toISOString().split('T')[0];
