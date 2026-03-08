@@ -259,31 +259,43 @@
 const SUPA_URL = 'https://hodwhvptvrbbwteephgw.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvZHdodnB0dnJiYnd0ZWVwaGd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MDg0MDgsImV4cCI6MjA4ODQ4NDQwOH0.Z9wtfKDq_gMgty6-j6ZRgdnS_nTH976jEVPPU5oXe4U';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
-let user = null, gensToday = 0;
+let user = null, gensToday = 0, userIsPro = false;
 const FREE_LIMIT = 3;
+
+async function loadProfile(u) {
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', u.id).single();
+  userIsPro = profile && profile.is_pro === true;
+  const today = new Date().toISOString().split('T')[0];
+  gensToday = (profile && profile.last_generation_date === today) ? (profile.generations_today || 0) : 0;
+  if (userIsPro) {
+    document.getElementById('genBadge').textContent = '⭐ Pro illimité';
+  } else {
+    document.getElementById('genBadge').textContent = gensToday+'/'+FREE_LIMIT+' générations';
+  }
+}
 
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     setUser(session.user);
+    await loadProfile(session.user);
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('success') === 'true') {
       await sb.from('profiles').upsert({ id: session.user.id, email: session.user.email, is_pro: true });
+      userIsPro = true;
       document.getElementById('genBadge').textContent = '⭐ Pro illimité';
       alert('🎉 Bienvenue dans TokDescription Pro !');
       window.history.replaceState({}, '', window.location.pathname);
     }
   } else { setGuest(); }
-  sb.auth.onAuthStateChange((e, session) => {
-    if (session) { setUser(session.user); closeModal(); }
-    else { user = null; setGuest(); }
+  sb.auth.onAuthStateChange(async (e, session) => {
+    if (session) { setUser(session.user); await loadProfile(session.user); closeModal(); }
+    else { user = null; userIsPro = false; setGuest(); }
   });
 }
 
 function setUser(u) {
   user = u;
-  const today = new Date().toISOString().split('T')[0];
-  gensToday = parseInt(localStorage.getItem('gen_'+u.id+'_'+today)||'0');
   document.getElementById('userEmail').style.display = 'inline';
   document.getElementById('userEmail').textContent = u.email;
   document.getElementById('genBadge').style.display = 'inline';
@@ -324,7 +336,7 @@ async function handleLogin() {
 
 async function handleGenerate() {
   if (!user) { openModal('signup'); return; }
-  if (gensToday >= FREE_LIMIT) { document.getElementById('limitBox').style.display='block'; return; }
+  if (!userIsPro && gensToday >= FREE_LIMIT) { document.getElementById('limitBox').style.display='block'; return; }
   const niche = document.getElementById('niche').value;
   const sujet = document.getElementById('sujet').value;
   const langue = document.getElementById('langue').value;
@@ -335,17 +347,18 @@ async function handleGenerate() {
   document.getElementById('limitBox').style.display='none';
   try {
     const res = await fetch('/api/generate', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ niche, sujet, langue, ton })
     });
     const data = await res.json();
     document.getElementById('resultText').textContent = data.result;
     document.getElementById('result').classList.add('show');
-    gensToday++;
-    const today = new Date().toISOString().split('T')[0];
-    localStorage.setItem('gen_'+user.id+'_'+today, gensToday);
-    document.getElementById('genBadge').textContent = gensToday+'/'+FREE_LIMIT+' générations';
+    if (!userIsPro) {
+      gensToday++;
+      const today = new Date().toISOString().split('T')[0];
+      await sb.from('profiles').upsert({ id: user.id, email: user.email, is_pro: false, generations_today: gensToday, last_generation_date: today });
+      document.getElementById('genBadge').textContent = gensToday+'/'+FREE_LIMIT+' générations';
+    }
   } catch(e) {
     document.getElementById('resultText').textContent = 'Erreur. Réessaie dans quelques secondes.';
     document.getElementById('result').classList.add('show');
