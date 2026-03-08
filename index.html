@@ -549,7 +549,7 @@ async function handleLogin(){
   err.style.display='none';
   if(!email||!pass){err.style.display='block';err.textContent='Remplis tous les champs !';return;}
   const{error}=await sb.auth.signInWithPassword({email,password:pass});
-  if(error){err.style.display='block';err.textContent='Email ou mot de passe incorrect.';}
+  if(error){err.style.display='block';err.textContent=error.message.includes('Email not confirmed')?'📧 Confirme ton email avant de te connecter. Vérifie ta boîte mail !':'Email ou mot de passe incorrect.';}
 }
 
 async function handleGenerate(){
