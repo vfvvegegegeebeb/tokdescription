@@ -271,16 +271,21 @@ async function init() {
   });
 }
 
-function setUser(u) {
+async function setUser(u) {
   user = u;
-  const today = new Date().toISOString().split('T')[0];
-  gensToday = parseInt(localStorage.getItem('gen_'+u.id+'_'+today)||'0');
   document.getElementById('userEmail').style.display = 'inline';
   document.getElementById('userEmail').textContent = u.email;
   document.getElementById('genBadge').style.display = 'inline';
-  document.getElementById('genBadge').textContent = gensToday+'/'+FREE_LIMIT+' générations';
   document.getElementById('navBtn').textContent = 'Se déconnecter';
   document.getElementById('navBtn').onclick = () => sb.auth.signOut();
+  const profile = await getOrCreateProfile();
+  const today = new Date().toISOString().split('T')[0];
+  if (profile && profile.is_pro) {
+    document.getElementById('genBadge').textContent = '⭐ Pro illimité';
+  } else {
+    gensToday = (profile && profile.last_generation_date === today) ? (profile.generations_today || 0) : 0;
+    document.getElementById('genBadge').textContent = gensToday+'/'+FREE_LIMIT+' générations';
+  }
 }
 
 function setGuest() {
@@ -313,9 +318,23 @@ async function handleLogin() {
   if (error) { err.style.display='block'; err.textContent='Email ou mot de passe incorrect.'; }
 }
 
+async function getOrCreateProfile() {
+  if (!user) return null;
+  let { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (!profile) {
+    await sb.from('profiles').insert({ id: user.id, email: user.email });
+    profile = { id: user.id, email: user.email, is_pro: false, generations_today: 0, last_generation_date: null };
+  }
+  return profile;
+}
+
 async function handleGenerate() {
   if (!user) { openModal('signup'); return; }
-  if (gensToday >= FREE_LIMIT) { document.getElementById('limitBox').style.display='block'; return; }
+  const profile = await getOrCreateProfile();
+  const today = new Date().toISOString().split('T')[0];
+  const isPro = profile && profile.is_pro;
+  const todayGens = (profile && profile.last_generation_date === today) ? (profile.generations_today || 0) : 0;
+  if (!isPro && todayGens >= FREE_LIMIT) { document.getElementById('limitBox').style.display='block'; return; }
   const niche = document.getElementById('niche').value;
   const sujet = document.getElementById('sujet').value;
   const langue = document.getElementById('langue').value;
@@ -333,10 +352,14 @@ async function handleGenerate() {
     const data = await res.json();
     document.getElementById('resultText').textContent = data.result;
     document.getElementById('result').classList.add('show');
-    gensToday++;
-    const today = new Date().toISOString().split('T')[0];
-    localStorage.setItem('gen_'+user.id+'_'+today, gensToday);
-    document.getElementById('genBadge').textContent = gensToday+'/'+FREE_LIMIT+' générations';
+    if (!isPro) {
+      const newCount = todayGens + 1;
+      await sb.from('profiles').update({ generations_today: newCount, last_generation_date: today }).eq('id', user.id);
+      gensToday = newCount;
+      document.getElementById('genBadge').textContent = gensToday+'/'+FREE_LIMIT+' générations';
+    } else {
+      document.getElementById('genBadge').textContent = '⭐ Pro illimité';
+    }
   } catch(e) {
     document.getElementById('resultText').textContent = 'Erreur. Réessaie dans quelques secondes.';
     document.getElementById('result').classList.add('show');
