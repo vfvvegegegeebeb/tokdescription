@@ -200,7 +200,7 @@
         <li>Tendances du jour</li>
         <li>Support prioritaire</li>
       </ul>
-      <button class="plan-btn plan-btn-p" onclick="openModal('signup')">Passer au Pro →</button>
+      <button class="plan-btn plan-btn-p" onclick="window.location.href='https://buy.stripe.com/test_9B6dR8draauA9iu8EJao800'">Passer au Pro →</button>
     </div>
   </div>
 </section>
@@ -227,7 +227,7 @@
 <footer>
   <div class="logo">Tok<span>Description</span></div>
   <p>© 2026 TokDescription. Tous droits réservés.</p>
-  <div style="display:flex;gap:24px;"><a href="mailto:elies.dapoigny@gmail.com">Support</a><a href="#">CGU</a></div>
+  <div style="display:flex;gap:24px;"><a href="/cdn-cgi/l/email-protection#5b3e37323e28753f3a2b34323c35221b3c363a323775383436">Support</a><a href="#">CGU</a></div>
 </footer>
 
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
@@ -255,7 +255,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPA_URL = 'https://hodwhvptvrbbwteephgw.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvZHdodnB0dnJiYnd0ZWVwaGd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MDg0MDgsImV4cCI6MjA4ODQ4NDQwOH0.Z9wtfKDq_gMgty6-j6ZRgdnS_nTH976jEVPPU5oXe4U';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
@@ -358,10 +358,4 @@ function switchModal(t) {
   document.getElementById('mLogin').style.display = t==='login'?'block':'none';
 }
 
-const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); }), {threshold:0.1});
-document.querySelectorAll('.fi').forEach(el => obs.observe(el));
-
-init();
-</script>
-</body>
-</html>
+const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting
