@@ -148,7 +148,7 @@
     </div>
     <div class="fg">
       <label>Sujet de ta vidéo</label>
-      <input type="text" id="sujet" placeholder="Ex: Les 3 habitudes des millionnaires" />
+      <input type="text" id="sujet" autocomplete="off" placeholder="Ex: Les 3 habitudes des millionnaires" />
     </div>
     <div class="fg">
       <label>Ton ou style</label>
@@ -264,7 +264,16 @@ const FREE_LIMIT = 3;
 
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) setUser(session.user);
+  if (session) {
+    setUser(session.user);
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+      await sb.from('profiles').upsert({ id: session.user.id, email: session.user.email, is_pro: true });
+      document.getElementById('genBadge').textContent = '⭐ Pro illimité';
+      alert('🎉 Bienvenue dans TokDescription Pro !');
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  } else { setGuest(); }
   sb.auth.onAuthStateChange((e, session) => {
     if (session) { setUser(session.user); closeModal(); }
     else { user = null; setGuest(); }
@@ -364,6 +373,5 @@ document.querySelectorAll('.fi').forEach(el => obs.observe(el));
 
 init();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.26.0/dist/umd/supabase.min.js"></script>
 </body>
 </html>
