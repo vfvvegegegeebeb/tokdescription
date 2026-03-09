@@ -188,7 +188,7 @@
     <button class="gen-btn" id="genBtn" onclick="handleGenerate()">✦ Générer ma description</button>
     <div class="limit-box" id="limitBox">
       <p>🔒 Limite atteinte ! Passe au Pro pour des générations illimitées.</p>
-      <button onclick="window.location.href='https://buy.stripe.com/test_9B6dR8draauA9iu8EJao800'">Passer au Pro – 9€/mois</button>
+      <button onclick="window.location.href='https://buy.stripe.com/6oUeVc4U34PpeRgg0M28800'">Passer au Pro – 9€/mois</button>
     </div>
     <div class="result" id="result">
       <h3>✦ Ta description générée</h3>
@@ -229,7 +229,7 @@
         <li>Historique 50 générations</li>
         <li>Support prioritaire</li>
       </ul>
-      <button class="plan-btn plan-btn-p" onclick="window.location.href='https://buy.stripe.com/test_9B6dR8draauA9iu8EJao800'">Passer au Pro →</button>
+      <button class="plan-btn plan-btn-p" onclick="window.location.href='https://buy.stripe.com/6oUeVc4U34PpeRgg0M28800'">Passer au Pro →</button>
     </div>
   </div>
 </section>
@@ -636,7 +636,7 @@ async function loadProfilePage(){
   const letter=userProfile&&userProfile.username?userProfile.username[0].toUpperCase():user.email[0].toUpperCase();
   document.getElementById('avatarCircle').textContent=letter;
   if(userProfile){document.getElementById('profileUsername').value=userProfile.username||'';document.getElementById('profileNiche').value=userProfile.niche||'';}
-  document.getElementById('subStatus').innerHTML=userIsPro?'<span style="color:var(--gold);font-weight:600;">⭐ Pro actif</span> — Générations illimitées':'🆓 Gratuit — <button onclick="window.location.href=\'https://buy.stripe.com/test_9B6dR8draauA9iu8EJao800\'" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600;margin-left:8px;">Passer au Pro →</button>';
+  document.getElementById('subStatus').innerHTML=userIsPro?'<span style="color:var(--gold);font-weight:600;">⭐ Pro actif</span> — Générations illimitées':'🆓 Gratuit — <button onclick="window.location.href=\'buy.stripe.com/6oUeVc4U34PpeRgg0M28800\'" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600;margin-left:8px;">Passer au Pro →</button>';
 }
 
 async function saveProfile(){
