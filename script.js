@@ -608,5 +608,188 @@ function saveScriptToHistory(){
   renderHistory();
 }
 
+
+// ── LIVE COUNTER ───────────────────────────────────────────────
+function animateLiveCounter(){
+  const el=document.getElementById('liveCount');
+  if(!el)return;
+  let base=2341;
+  setInterval(()=>{
+    const delta=Math.floor(Math.random()*3)-1;
+    base=Math.max(2100,base+delta);
+    el.textContent=base.toLocaleString('fr-FR');
+  },4000);
+}
+
+// ── SOCIAL PROOF TOASTS ────────────────────────────────────────
+const toastUsers=[
+  {name:'@karim_fit',action:'vient de générer une description'},
+  {name:'@lea_business',action:'vient de passer au Pro'},
+  {name:'@thomas_cr',action:'vient de générer des hooks viraux'},
+  {name:'@sarah_mode',action:'vient d'analyser sa vidéo'},
+  {name:'@marco_crypto',action:'vient de générer un script'},
+  {name:'@julie_food',action:'vient de générer son planning 7j'},
+  {name:'@ryan_gaming',action:'vient de passer au Pro'},
+  {name:'@inès_skin',action:'vient d'analyser son compte TikTok'},
+];
+let toastIndex=0;
+function showToast(){
+  const t=toastUsers[toastIndex%toastUsers.length];
+  toastIndex++;
+  const toast=document.getElementById('toast');
+  const avatar=document.getElementById('toastAvatar');
+  const text=document.getElementById('toastText');
+  avatar.textContent=t.name[1].toUpperCase();
+  text.textContent=t.name+' '+t.action;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3500);
+}
+function startToasts(){
+  setTimeout(()=>{showToast();setInterval(showToast,8000);},5000);
+}
+
+// ── EXIT INTENT ────────────────────────────────────────────────
+let exitShown=false;
+function initExitIntent(){
+  document.addEventListener('mouseleave',(e)=>{
+    if(e.clientY<=0&&!exitShown&&!user){
+      exitShown=true;
+      document.getElementById('exitPopup').classList.add('open');
+    }
+  });
+}
+function closeExitPopup(){
+  document.getElementById('exitPopup').classList.remove('open');
+}
+
+// ── BIO GENERATOR ──────────────────────────────────────────────
+async function generateBio(){
+  if(!user){openModal('signup');return;}
+  if(!userIsPro&&getFreeUsed()){showUpgrade('bioUpgrade','bioResult');return;}
+  const niche=document.getElementById('proBioNiche').value;
+  const pseudo=document.getElementById('proBioPseudo').value;
+  const valeur=document.getElementById('proBioValeur').value;
+  const langue=document.getElementById('proBioLangue').value;
+  const objectif=document.getElementById('proBioObjectif').value;
+  if(!valeur){alert('Décris ta valeur ajoutée !');return;}
+  const btn=document.getElementById('proBioBtn');
+  btn.disabled=true;btn.innerHTML='<span class="dots">Génération en cours</span>';
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'bio',niche,pseudo,valeur,langue,objectif})});
+    const data=await res.json();
+    document.getElementById('bioResultText').textContent=data.result;
+    document.getElementById('bioResult').classList.add('show');
+    document.getElementById('bioUpgrade').style.display='none';
+    if(!userIsPro){setFreeUsed();updateNav();setTimeout(()=>showUpgrade('bioUpgrade',null),800);}
+  }catch(e){document.getElementById('bioResultText').textContent='Erreur. Réessaie.';document.getElementById('bioResult').classList.add('show');}
+  btn.disabled=false;btn.innerHTML='👤 Générer ma bio TikTok';
+}
+
+// ── THUMBNAIL GENERATOR ────────────────────────────────────────
+async function generateThumbnail(){
+  if(!user){openModal('signup');return;}
+  if(!userIsPro&&getFreeUsed()){showUpgrade('thumbUpgrade','thumbResult');return;}
+  const niche=document.getElementById('proThumbNiche').value;
+  const sujet=document.getElementById('proThumbSujet').value;
+  const style=document.getElementById('proThumbStyle').value;
+  if(!sujet){alert('Entre le sujet de ta vidéo !');return;}
+  const btn=document.getElementById('proThumbBtn');
+  btn.disabled=true;btn.innerHTML='<span class="dots">Génération en cours</span>';
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'thumbnail',niche,sujet,style})});
+    const data=await res.json();
+    document.getElementById('thumbResultText').textContent=data.result;
+    document.getElementById('thumbResult').classList.add('show');
+    document.getElementById('thumbUpgrade').style.display='none';
+    if(!userIsPro){setFreeUsed();updateNav();setTimeout(()=>showUpgrade('thumbUpgrade',null),800);}
+  }catch(e){document.getElementById('thumbResultText').textContent='Erreur. Réessaie.';document.getElementById('thumbResult').classList.add('show');}
+  btn.disabled=false;btn.innerHTML='🖼️ Générer mon concept miniature';
+}
+
+// ── ACCOUNT ANALYZER ───────────────────────────────────────────
+async function analyzeAccount(){
+  if(!user){openModal('signup');return;}
+  if(!userIsPro&&getFreeUsed()){showUpgrade('accountUpgrade','accountResult');return;}
+  const pseudo=document.getElementById('proAccountPseudo').value;
+  const niche=document.getElementById('proAccountNiche').value;
+  const followers=document.getElementById('proAccountFollowers').value;
+  const views=document.getElementById('proAccountViews').value;
+  const probleme=document.getElementById('proAccountProbleme').value;
+  const desc=document.getElementById('proAccountDesc').value;
+  if(!followers){alert('Entre ton nombre d'abonnés !');return;}
+  const btn=document.getElementById('proAccountBtn');
+  btn.disabled=true;btn.innerHTML='<span class="dots">Analyse en cours</span>';
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'account',pseudo,niche,followers,views,probleme,desc})});
+    const data=await res.json();
+    document.getElementById('accountResultText').textContent=data.result;
+    document.getElementById('accountResult').classList.add('show');
+    document.getElementById('accountUpgrade').style.display='none';
+    if(!userIsPro){setFreeUsed();updateNav();setTimeout(()=>showUpgrade('accountUpgrade',null),800);}
+  }catch(e){document.getElementById('accountResultText').textContent='Erreur. Réessaie.';document.getElementById('accountResult').classList.add('show');}
+  btn.disabled=false;btn.innerHTML='🔎 Analyser mon compte';
+}
+
+// ── DEMO VERSIONS ──────────────────────────────────────────────
+async function handleDemoBio(){
+  if(!checkAndBlockDemo())return;
+  const niche=document.getElementById('demoBioNiche').value;
+  const pseudo=document.getElementById('demoBioPseudo').value;
+  const valeur=document.getElementById('demoBioValeur').value;
+  const objectif=document.getElementById('demoBioObjectif').value;
+  if(!valeur){alert('Décris ta valeur ajoutée !');return;}
+  const btn=document.getElementById('demoBioBtn');
+  btn.disabled=true;btn.innerHTML='<span class="dots">Génération en cours</span>';
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'bio',niche,pseudo,valeur,langue:'français',objectif})});
+    const data=await res.json();
+    document.getElementById('demoBioResultText').textContent=data.result;
+    document.getElementById('demoBioResult').classList.add('show');
+    afterDemoGenerate();
+  }catch(e){document.getElementById('demoBioResultText').textContent='Erreur. Réessaie.';document.getElementById('demoBioResult').classList.add('show');}
+  btn.disabled=false;btn.innerHTML='👤 Générer ma bio';
+}
+
+async function handleDemoThumbnail(){
+  if(!checkAndBlockDemo())return;
+  const niche=document.getElementById('demoThumbNiche').value;
+  const sujet=document.getElementById('demoThumbSujet').value;
+  const style=document.getElementById('demoThumbStyle').value;
+  if(!sujet){alert('Entre le sujet de ta vidéo !');return;}
+  const btn=document.getElementById('demoThumbBtn');
+  btn.disabled=true;btn.innerHTML='<span class="dots">Génération en cours</span>';
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'thumbnail',niche,sujet,style})});
+    const data=await res.json();
+    document.getElementById('demoThumbResultText').textContent=data.result;
+    document.getElementById('demoThumbResult').classList.add('show');
+    afterDemoGenerate();
+  }catch(e){document.getElementById('demoThumbResultText').textContent='Erreur. Réessaie.';document.getElementById('demoThumbResult').classList.add('show');}
+  btn.disabled=false;btn.innerHTML='🖼️ Générer mon concept miniature';
+}
+
+async function handleDemoAccount(){
+  if(!checkAndBlockDemo())return;
+  const pseudo=document.getElementById('demoAccountPseudo').value;
+  const niche=document.getElementById('demoAccountNiche').value;
+  const followers=document.getElementById('demoAccountFollowers').value;
+  const views=document.getElementById('demoAccountViews').value;
+  const probleme=document.getElementById('demoAccountProbleme').value;
+  if(!followers){alert('Entre ton nombre d'abonnés !');return;}
+  const btn=document.getElementById('demoAccountBtn');
+  btn.disabled=true;btn.innerHTML='<span class="dots">Analyse en cours</span>';
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'account',pseudo,niche,followers,views,probleme,desc:''})});
+    const data=await res.json();
+    document.getElementById('demoAccountResultText').textContent=data.result;
+    document.getElementById('demoAccountResult').classList.add('show');
+    afterDemoGenerate();
+  }catch(e){document.getElementById('demoAccountResultText').textContent='Erreur. Réessaie.';document.getElementById('demoAccountResult').classList.add('show');}
+  btn.disabled=false;btn.innerHTML='🔎 Analyser mon compte';
+}
+
 setStars(5);
 init();
+animateLiveCounter();
+startToasts();
+initExitIntent();
