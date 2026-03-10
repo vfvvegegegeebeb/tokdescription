@@ -610,15 +610,13 @@ function saveScriptToHistory(){
 
 
 // ── LIVE COUNTER ───────────────────────────────────────────────
-function animateLiveCounter(){
+async function animateLiveCounter(){
   const el=document.getElementById('liveCount');
   if(!el)return;
-  let base=2341;
-  setInterval(()=>{
-    const delta=Math.floor(Math.random()*3)-1;
-    base=Math.max(2100,base+delta);
-    el.textContent=base.toLocaleString('fr-FR');
-  },4000);
+  try{
+    const {count}=await sb.from('profiles').select('*',{count:'exact',head:true});
+    el.textContent=(count||0).toLocaleString('fr-FR');
+  }catch(e){el.textContent='500+';}
 }
 
 // ── SOCIAL PROOF TOASTS ────────────────────────────────────────
