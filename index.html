@@ -197,6 +197,7 @@
   <div class="nav-right">
     <span class="gen-badge" id="genBadge"></span>
     <span class="user-email" id="userEmail" onclick="showPage('profile')"></span>
+    <a id="loginLink" onclick="openModal('login')" style="font-size:0.85rem;color:var(--muted);cursor:pointer;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--muted)'">Se connecter</a>
     <button class="nav-cta" id="navBtn" onclick="openModal('signup')">Commencer gratuitement</button>
   </div>
 </nav>
@@ -1020,6 +1021,7 @@ function updateNav(){
   document.getElementById('userEmail').style.display='inline';
   document.getElementById('userEmail').textContent=username;
   document.getElementById('genBadge').style.display='inline';
+  document.getElementById('loginLink').style.display='none';
   if(userIsPro){
     document.getElementById('genBadge').textContent='⭐ Pro';
     document.getElementById('genBadge').className='gen-badge pro-badge';
@@ -1043,6 +1045,7 @@ function updateNav(){
 function setGuest(){
   document.getElementById('userEmail').style.display='none';
   document.getElementById('genBadge').style.display='none';
+  document.getElementById('loginLink').style.display='inline';
   document.getElementById('navBtn').textContent='Commencer gratuitement';
   document.getElementById('navBtn').onclick=()=>openModal('signup');
 }
