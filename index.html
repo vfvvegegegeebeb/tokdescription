@@ -187,6 +187,28 @@
     @keyframes d{0%,20%{content:'';}40%{content:'.';}60%{content:'..';}80%,100%{content:'...'}}
 
     .demo-panel{display:none;}.demo-panel.active{display:block;}
+
+    /* EXIT INTENT POPUP */
+    .exit-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);z-index:300;justify-content:center;align-items:center;padding:20px;}
+    .exit-popup.open{display:flex;}
+    .exit-popup-box{background:#111;border:1px solid rgba(232,197,71,0.4);border-radius:20px;padding:44px;max-width:480px;width:100%;text-align:center;position:relative;}
+    .exit-popup-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;}
+    .exit-popup-emoji{font-size:2.5rem;margin-bottom:16px;}
+    .exit-popup-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:10px;}
+    .exit-popup-sub{color:var(--muted);font-size:0.9rem;margin-bottom:24px;line-height:1.6;}
+    .exit-popup-btn{background:var(--gold);color:var(--black);border:none;padding:15px 32px;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;width:100%;transition:transform 0.2s;}
+    .exit-popup-btn:hover{transform:translateY(-2px);}
+    .exit-popup-skip{margin-top:12px;font-size:0.8rem;color:var(--muted);cursor:pointer;text-decoration:underline;}
+    /* LIVE COUNTER */
+    .live-counter{display:inline-flex;align-items:center;gap:8px;background:rgba(107,255,158,0.08);border:1px solid rgba(107,255,158,0.2);color:#6bff9e;padding:6px 16px;border-radius:100px;font-size:0.8rem;font-weight:500;margin-bottom:24px;}
+    .live-dot{width:7px;height:7px;background:#6bff9e;border-radius:50%;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+    /* NOTIFICATION TOAST */
+    .toast{position:fixed;bottom:24px;left:24px;background:#111;border:1px solid #2a2a2a;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;z-index:400;transform:translateX(-120%);transition:transform 0.4s ease;max-width:300px;}
+    .toast.show{transform:translateX(0);}
+    .toast-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#f0a500);display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:700;color:var(--black);flex-shrink:0;}
+    .toast-text{font-size:0.8rem;color:var(--white);line-height:1.4;}
+    .toast-time{font-size:0.7rem;color:var(--muted);margin-top:2px;}
     @media(max-width:768px){nav{padding:16px 20px;}.frow,.frow3,.pricing-grid,.reviews-grid,.pro-grid{grid-template-columns:1fr;}.card,.pro-card,.pro-gen-area{padding:20px;}.pro-tabs{overflow-x:auto;}}
   </style>
 </head>
@@ -206,6 +228,7 @@
 <div class="page active" id="pageHome">
 
 <section class="hero">
+  <div class="live-counter"><span class="live-dot"></span><span id="liveCount">2 341</span> créateurs actifs</div>
   <div class="badge">✦ Outil N°1 pour les créateurs TikTok FR</div>
   <h1>Tes descriptions TikTok en <em>10 secondes</em></h1>
   <p class="hero-sub">Génère automatiquement des descriptions optimisées + hashtags + heure de post idéale. Arrête de perdre du temps, commence à avoir des vues.</p>
@@ -234,7 +257,10 @@
     <button class="pro-tab" onclick="switchDemoTab('calendar',this)">📅 Calendrier</button>
     <button class="pro-tab" onclick="switchDemoTab('analyzer',this)">🔍 Analyser description</button>
     <button class="pro-tab" onclick="switchDemoTab('video',this)">🎬 Analyser vidéo</button>
-    <button class="pro-tab" onclick="switchDemoTab('script',this)">🎬 Script vidéo</button>
+    <button class="pro-tab" onclick="switchDemoTab('script',this)">📝 Script vidéo</button>
+    <button class="pro-tab" onclick="switchDemoTab('bio',this)">👤 Bio TikTok</button>
+    <button class="pro-tab" onclick="switchDemoTab('thumbnail',this)">🖼️ Miniature</button>
+    <button class="pro-tab" onclick="switchDemoTab('account',this)">🔎 Analyser compte</button>
   </div>
 
   <!-- UPGRADE BLOCK GLOBAL -->
@@ -439,6 +465,72 @@
     </div>
   </div>
 
+  <!-- PANEL BIO -->
+  <div class="demo-panel" id="demoPanelBio">
+    <div class="card">
+      <div class="frow">
+        <div class="fg"><label>Ta niche</label><input type="text" id="demoBioNiche" autocomplete="off" placeholder="Ex: business, fitness..."/></div>
+        <div class="fg"><label>Ton pseudo TikTok</label><input type="text" id="demoBioPseudo" autocomplete="off" placeholder="@ton_pseudo"/></div>
+      </div>
+      <div class="fg"><label>Ta valeur ajoutée</label><input type="text" id="demoBioValeur" autocomplete="off" placeholder="Ex: conseils pour gagner de l argent en ligne"/></div>
+      <div class="fg"><label>Objectif</label>
+        <select id="demoBioObjectif">
+          <option value="abonnés">Gagner des abonnés</option>
+          <option value="lien bio">Pousser vers le lien en bio</option>
+          <option value="ventes">Vendre un produit</option>
+          <option value="autorité">Établir son autorité</option>
+        </select>
+      </div>
+      <button class="gen-btn" id="demoBioBtn" onclick="handleDemoBio()">👤 Générer ma bio</button>
+      <div class="result" id="demoBioResult"><h3>👤 Ta bio TikTok</h3><div class="result-text" id="demoBioResultText"></div><button class="copy-btn" onclick="copyResult('demoBioResultText',this)">Copier</button></div>
+    </div>
+  </div>
+
+  <!-- PANEL THUMBNAIL -->
+  <div class="demo-panel" id="demoPanelThumbnail">
+    <div class="card">
+      <div class="frow">
+        <div class="fg"><label>Ta niche</label><input type="text" id="demoThumbNiche" autocomplete="off" placeholder="Ex: fitness, business..."/></div>
+        <div class="fg"><label>Sujet de la vidéo</label><input type="text" id="demoThumbSujet" autocomplete="off" placeholder="Ex: comment perdre 5kg en 30 jours"/></div>
+      </div>
+      <div class="fg"><label>Style visuel</label>
+        <select id="demoThumbStyle">
+          <option value="choc">Choc / Émotion forte</option>
+          <option value="curiosité">Curiosité / Mystère</option>
+          <option value="avant-après">Avant / Après</option>
+          <option value="liste">Liste / Chiffre</option>
+          <option value="clean">Clean / Minimaliste</option>
+        </select>
+      </div>
+      <button class="gen-btn" id="demoThumbBtn" onclick="handleDemoThumbnail()">🖼️ Générer mon concept miniature</button>
+      <div class="result" id="demoThumbResult"><h3>🖼️ Concept de ta miniature</h3><div class="result-text" id="demoThumbResultText"></div><button class="copy-btn" onclick="copyResult('demoThumbResultText',this)">Copier</button></div>
+    </div>
+  </div>
+
+  <!-- PANEL ACCOUNT -->
+  <div class="demo-panel" id="demoPanelAccount">
+    <div class="card">
+      <div class="frow">
+        <div class="fg"><label>Ton pseudo TikTok</label><input type="text" id="demoAccountPseudo" autocomplete="off" placeholder="@ton_pseudo"/></div>
+        <div class="fg"><label>Ta niche</label><input type="text" id="demoAccountNiche" autocomplete="off" placeholder="Ex: business, fitness..."/></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Nombre d'abonnés</label><input type="text" id="demoAccountFollowers" autocomplete="off" placeholder="Ex: 1200, 45k"/></div>
+        <div class="fg"><label>Vues moyennes</label><input type="text" id="demoAccountViews" autocomplete="off" placeholder="Ex: 500, 10k"/></div>
+      </div>
+      <div class="fg"><label>Ton problème principal</label>
+        <select id="demoAccountProbleme">
+          <option value="peu de vues">Pas assez de vues</option>
+          <option value="peu d'abonnés">Peu de nouveaux abonnés</option>
+          <option value="faible engagement">Faible engagement</option>
+          <option value="pas de viralité">Aucune vidéo virale</option>
+        </select>
+      </div>
+      <button class="gen-btn" id="demoAccountBtn" onclick="handleDemoAccount()">🔎 Analyser mon compte</button>
+      <div class="result" id="demoAccountResult"><h3>🔎 Analyse de ton compte</h3><div class="result-text" id="demoAccountResultText"></div><button class="copy-btn" onclick="copyResult('demoAccountResultText',this)">Copier</button></div>
+    </div>
+  </div>
+
 </section>
 
 <!-- PRICING -->
@@ -562,6 +654,9 @@
     <button class="pro-tab" onclick="switchTab('calendar',this)">📅 Calendrier</button>
     <button class="pro-tab" onclick="switchTab('analyzer',this)">🔍 Analyser description</button>
     <button class="pro-tab" onclick="switchTab('script',this)">📝 Script vidéo</button>
+    <button class="pro-tab" onclick="switchTab('bio',this)">👤 Bio TikTok</button>
+    <button class="pro-tab" onclick="switchTab('thumbnail',this)">🖼️ Miniature</button>
+    <button class="pro-tab" onclick="switchTab('account',this)">🔎 Analyser compte</button>
     <button class="pro-tab" onclick="switchTab('history',this)">📊 Historique</button>
   </div>
 
@@ -882,6 +977,92 @@
     </div>
   </div>
 
+  <!-- TAB BIO -->
+  <div class="pro-panel" id="tabBio">
+    <div class="pro-gen-area">
+      <div class="pro-card-title">👤 Générateur de bio TikTok</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:20px;">Une bio optimisée convertit les visiteurs en abonnés. Génère une bio percutante qui donne envie de suivre ton compte.</p>
+      <div class="frow">
+        <div class="fg"><label>Ta niche</label><input type="text" id="proBioNiche" autocomplete="off" placeholder="Ex: business, fitness, crypto..."/></div>
+        <div class="fg"><label>Ton pseudo TikTok</label><input type="text" id="proBioPseudo" autocomplete="off" placeholder="Ex: @ton_pseudo"/></div>
+      </div>
+      <div class="fg"><label>Ce que tu proposes / ta valeur ajoutée</label><input type="text" id="proBioValeur" autocomplete="off" placeholder="Ex: je partage des conseils pour gagner de l argent en ligne"/></div>
+      <div class="frow">
+        <div class="fg"><label>Langue</label>
+          <select id="proBioLangue">
+            <option value="français">Français 🇫🇷</option><option value="anglais">Anglais 🇬🇧</option>
+            <option value="espagnol">Espagnol 🇪🇸</option><option value="arabe">Arabe 🇸🇦</option>
+          </select>
+        </div>
+        <div class="fg"><label>Objectif principal</label>
+          <select id="proBioObjectif">
+            <option value="abonnés">Gagner des abonnés</option>
+            <option value="lien bio">Pousser vers le lien en bio</option>
+            <option value="ventes">Vendre un produit/service</option>
+            <option value="autorité">Établir son autorité</option>
+          </select>
+        </div>
+      </div>
+      <button class="gen-btn" id="proBioBtn" onclick="generateBio()">👤 Générer ma bio TikTok</button>
+      <div class="result" id="bioResult"><h3>👤 Ta bio TikTok</h3><div class="result-text" id="bioResultText"></div><button class="copy-btn" onclick="copyResult('bioResultText',this)" style="margin-top:14px;">Copier</button></div>
+      <div class="upgrade-block" id="bioUpgrade"><div class="ub-icon">🔒</div><div class="ub-title">Essai gratuit utilisé</div><div class="ub-desc">Passe au Pro pour générer des bios illimitées.</div><button class="ub-btn" onclick="window.location.href='https://buy.stripe.com/6oUeVc4U34PpeRgg0M28800'">⚡ Passer au Pro – 9€/mois</button></div>
+    </div>
+  </div>
+
+  <!-- TAB THUMBNAIL -->
+  <div class="pro-panel" id="tabThumbnail">
+    <div class="pro-gen-area">
+      <div class="pro-card-title">🖼️ Générateur de concept miniature</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:20px;">La miniature décide si les gens cliquent ou non. Génère un concept visuel + texte accrocheur pour ta vignette.</p>
+      <div class="frow">
+        <div class="fg"><label>Ta niche</label><input type="text" id="proThumbNiche" autocomplete="off" placeholder="Ex: business, fitness..."/></div>
+        <div class="fg"><label>Sujet de la vidéo</label><input type="text" id="proThumbSujet" autocomplete="off" placeholder="Ex: comment gagner 1000€/mois"/></div>
+      </div>
+      <div class="fg"><label>Style visuel</label>
+        <select id="proThumbStyle">
+          <option value="choc">Choc / Émotion forte</option>
+          <option value="curiosité">Curiosité / Mystère</option>
+          <option value="avant-après">Avant / Après</option>
+          <option value="liste">Liste / Chiffre</option>
+          <option value="réaction">Réaction / Expression</option>
+          <option value="clean">Clean / Minimaliste</option>
+        </select>
+      </div>
+      <button class="gen-btn" id="proThumbBtn" onclick="generateThumbnail()">🖼️ Générer mon concept miniature</button>
+      <div class="result" id="thumbResult"><h3>🖼️ Concept de ta miniature</h3><div class="result-text" id="thumbResultText"></div><button class="copy-btn" onclick="copyResult('thumbResultText',this)" style="margin-top:14px;">Copier</button></div>
+      <div class="upgrade-block" id="thumbUpgrade"><div class="ub-icon">🔒</div><div class="ub-title">Essai gratuit utilisé</div><div class="ub-desc">Passe au Pro pour des concepts illimités.</div><button class="ub-btn" onclick="window.location.href='https://buy.stripe.com/6oUeVc4U34PpeRgg0M28800'">⚡ Passer au Pro – 9€/mois</button></div>
+    </div>
+  </div>
+
+  <!-- TAB ACCOUNT ANALYZER -->
+  <div class="pro-panel" id="tabAccount">
+    <div class="pro-gen-area">
+      <div class="pro-card-title">🔎 Analyseur de compte TikTok</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:20px;">Entre les infos de ton compte — l'IA analyse et te donne un plan d'action personnalisé pour exploser ta croissance.</p>
+      <div class="frow">
+        <div class="fg"><label>Ton pseudo TikTok</label><input type="text" id="proAccountPseudo" autocomplete="off" placeholder="@ton_pseudo"/></div>
+        <div class="fg"><label>Ta niche</label><input type="text" id="proAccountNiche" autocomplete="off" placeholder="Ex: business, fitness..."/></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Nombre d'abonnés actuel</label><input type="text" id="proAccountFollowers" autocomplete="off" placeholder="Ex: 1200, 45k, 200k"/></div>
+        <div class="fg"><label>Vues moyennes par vidéo</label><input type="text" id="proAccountViews" autocomplete="off" placeholder="Ex: 500, 10k, 50k"/></div>
+      </div>
+      <div class="fg"><label>Ton problème principal</label>
+        <select id="proAccountProbleme">
+          <option value="peu de vues">Pas assez de vues</option>
+          <option value="peu d'abonnés">Peu de nouveaux abonnés</option>
+          <option value="faible engagement">Faible engagement (likes/commentaires)</option>
+          <option value="pas de viralité">Aucune vidéo virale</option>
+          <option value="contenu bloqué">Contenu bloqué / shadowban</option>
+        </select>
+      </div>
+      <div class="fg"><label>Décris ton contenu en quelques mots</label><textarea id="proAccountDesc" placeholder="Ex: je poste des conseils business, 3 fois par semaine, format éducatif de 60 secondes..."></textarea></div>
+      <button class="gen-btn" id="proAccountBtn" onclick="analyzeAccount()">🔎 Analyser mon compte</button>
+      <div class="result" id="accountResult"><h3>🔎 Analyse de ton compte</h3><div class="result-text" id="accountResultText"></div><button class="copy-btn" onclick="copyResult('accountResultText',this)" style="margin-top:14px;">Copier</button></div>
+      <div class="upgrade-block" id="accountUpgrade"><div class="ub-icon">🔒</div><div class="ub-title">Essai gratuit utilisé</div><div class="ub-desc">Passe au Pro pour des analyses illimitées.</div><button class="ub-btn" onclick="window.location.href='https://buy.stripe.com/6oUeVc4U34PpeRgg0M28800'">⚡ Passer au Pro – 9€/mois</button></div>
+    </div>
+  </div>
+
   <!-- TAB HISTORY -->
   <div class="pro-panel" id="tabHistory">
     <div class="pro-card">
@@ -921,6 +1102,27 @@
     <button onclick="sb.auth.signOut()" style="background:transparent;border:1px solid #2a2a2a;color:var(--muted);padding:11px 22px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.88rem;">Se déconnecter</button>
   </div>
 </div>
+</div>
+
+<!-- EXIT INTENT POPUP -->
+<div class="exit-popup" id="exitPopup">
+  <div class="exit-popup-box">
+    <button class="exit-popup-close" onclick="closeExitPopup()">×</button>
+    <div class="exit-popup-emoji">⚡</div>
+    <div class="exit-popup-title">Attends ! Tu pars déjà ?</div>
+    <div class="exit-popup-sub">Tu n'as pas encore essayé TokDescription. En 10 secondes tu peux générer une description qui va booster tes vues — gratuitement.</div>
+    <button class="exit-popup-btn" onclick="closeExitPopup();openModal('signup')">Essayer gratuitement →</button>
+    <div class="exit-popup-skip" onclick="closeExitPopup()">Non merci, je préfère perdre du temps</div>
+  </div>
+</div>
+
+<!-- NOTIFICATION TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-avatar" id="toastAvatar">K</div>
+  <div>
+    <div class="toast-text" id="toastText">@karim_fit vient de générer une description</div>
+    <div class="toast-time">il y a 2 minutes</div>
+  </div>
 </div>
 
 <!-- ===== MODAL ===== -->
