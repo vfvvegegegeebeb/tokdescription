@@ -614,10 +614,9 @@ async function animateLiveCounter(){
   const el=document.getElementById('liveCount');
   if(!el)return;
   try{
-    const {count}=await sb.from('profiles').select('*',{count:'exact',head:true});
-    const real=count||0;
-    const display=real+100;
-    el.textContent=display.toLocaleString('fr-FR');
+    const {data,error}=await sb.from('profiles').select('id');
+    const real=data?data.length:0;
+    el.textContent=(real+100).toLocaleString('fr-FR');
   }catch(e){el.textContent='100';}
 }
 
