@@ -217,7 +217,7 @@ Format EXACT :
   // MODE: SCRIPT GENERATOR
   // ============================================================
   } else if (mode === 'script') {
-    const dureeLabel = duree === '30' ? '30 secondes (environ 75 mots a l oral)' : duree === '60' ? '1 minute (environ 150 mots)' : duree === '180' ? '3 minutes (environ 450 mots)' : '5 minutes (environ 750 mots)';
+    const dureeLabel = duree === '30' ? '30 secondes' : duree === '60' ? '1 minute' : duree === '180' ? '3 minutes' : '5 minutes';
     prompt = `Tu es le meilleur scénariste de contenu TikTok au monde. Tu as écrit des scripts pour des créateurs avec des millions d'abonnés.
 
 Génère un script TikTok COMPLET et PRÊT À TOURNER en ${langue || 'français'} pour :
