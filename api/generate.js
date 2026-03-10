@@ -258,6 +258,109 @@ Format EXACT :
 #️⃣ HASHTAGS POUR CETTE VIDÉO :
 [15 hashtags ultra-ciblés]`;
 
+
+  // ============================================================
+  // MODE: BIO GENERATOR
+  // ============================================================
+  } else if (mode === 'bio') {
+    const { pseudo, valeur, objectif } = body;
+    prompt = `Tu es expert en personal branding TikTok. Génère 3 versions de bio TikTok en ${langue || 'français'} pour ce créateur :
+- Niche : "${niche || 'générale'}"
+- Pseudo : "${pseudo || 'non précisé'}"
+- Valeur ajoutée : "${valeur}"
+- Objectif : "${objectif || 'gagner des abonnés'}"
+
+CONTRAINTES ABSOLUES :
+- Maximum 80 caractères par bio (limite TikTok)
+- Inclure 1-2 emojis maximum par bio
+- Chaque bio doit être différente dans l'approche
+- Bio 1 : axée sur la valeur / ce que tu apportes
+- Bio 2 : axée sur l'identité / qui tu es
+- Bio 3 : axée sur l'action / ce que doit faire le visiteur
+
+Format :
+BIO 1 — [Approche valeur]
+[texte]
+
+BIO 2 — [Approche identité]
+[texte]
+
+BIO 3 — [Approche action]
+[texte]
+
+CONSEIL : [1 conseil pour choisir la meilleure selon l'objectif]`;
+
+  // ============================================================
+  // MODE: THUMBNAIL CONCEPT
+  // ============================================================
+  } else if (mode === 'thumbnail') {
+    const { style } = body;
+    prompt = `Tu es expert en miniatures virales TikTok et YouTube. Génère 3 concepts de miniature pour cette vidéo :
+- Niche : "${niche || 'générale'}"
+- Sujet : "${sujet}"
+- Style : "${style || 'choc'}"
+
+Pour chaque concept donne :
+- Le TEXTE exact à mettre sur la miniature (court, max 5 mots, en majuscules)
+- La DESCRIPTION VISUELLE précise (expression du visage, arrière-plan, couleurs dominantes, mise en scène)
+- Pourquoi ce concept va faire CLIQUER
+
+Format :
+
+CONCEPT 1 🔥
+Texte : [TEXTE EN MAJUSCULES]
+Visuel : [description précise]
+Pourquoi ça clique : [explication courte]
+
+CONCEPT 2 💡
+Texte : [TEXTE EN MAJUSCULES]
+Visuel : [description précise]
+Pourquoi ça clique : [explication courte]
+
+CONCEPT 3 ⚡
+Texte : [TEXTE EN MAJUSCULES]
+Visuel : [description précise]
+Pourquoi ça clique : [explication courte]
+
+RECOMMANDATION : [lequel choisir et pourquoi]`;
+
+  // ============================================================
+  // MODE: ACCOUNT ANALYZER
+  // ============================================================
+  } else if (mode === 'account') {
+    const { pseudo, followers, views, probleme, desc } = body;
+    prompt = `Tu es le meilleur coach TikTok au monde. Analyse ce compte et donne un plan d'action personnalisé :
+
+INFOS DU COMPTE :
+- Pseudo : "${pseudo || 'non précisé'}"
+- Niche : "${niche || 'non précisée'}"
+- Abonnés : "${followers}"
+- Vues moyennes : "${views || 'non précisé'}"
+- Problème principal : "${probleme}"
+- Description du contenu : "${desc || 'non précisé'}"
+
+Fais une analyse COMPLÈTE et HONNÊTE :
+
+📊 DIAGNOSTIC
+[Analyse de la situation actuelle — points forts et points faibles]
+
+🔴 LE VRAI PROBLÈME
+[Identifie la vraie cause racine du problème, pas juste les symptômes]
+
+⚡ PLAN D'ACTION — 3 PRIORITÉS IMMÉDIATES
+1. [Action concrète à faire cette semaine]
+2. [Action concrète à faire cette semaine]
+3. [Action concrète à faire cette semaine]
+
+📈 STRATÉGIE 30 JOURS
+[Plan structuré sur 30 jours pour résoudre le problème]
+
+🎯 OBJECTIF RÉALISTE
+[Ce que ce créateur peut espérer atteindre en 30 jours s'il applique tout]
+
+💬 MESSAGE DIRECT
+[Un message direct et motivant personnalisé pour ce créateur]`;
+
   // ============================================================
   // MODE: FREE GENERATOR (version premium pour la première impression)
   // ============================================================
