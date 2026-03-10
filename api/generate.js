@@ -8,152 +8,247 @@ export default async function handler(req, res) {
   const { mode, niche, sujet, langue, ton, longueur, emojis, cta, pro, base64, mediaType, context, type, text, objectif } = req.body;
 
   let prompt = '';
-  let useVision = false;
-  let imageData = null;
 
+  // ============================================================
   // MODE: VIDEO ANALYZER
+  // ============================================================
   if (mode === 'video') {
-    useVision = true;
-    imageData = base64;
-    prompt = `Tu es un expert TikTok. Analyse cette image/vidéo et génère une description TikTok optimisée en ${langue || 'français'}.
-${context ? 'Contexte fourni par le créateur : ' + context : ''}
+    prompt = `Tu es le meilleur expert en croissance TikTok au monde, spécialisé dans le marché francophone. Tu as aidé des centaines de créateurs à passer de 0 à 100k abonnés.
 
-Génère dans ce format exact :
+Analyse cette image/vidéo TikTok et génère une description qui va exploser les vues.
+${context ? `Contexte du créateur : "${context}"` : ''}
+Langue de réponse : ${langue || 'français'}
 
-🎬 ANALYSE DU CONTENU :
-[Ce que tu vois dans la vidéo / ce que le créateur veut transmettre]
+Sois ULTRA PRÉCIS, ULTRA CONCRET. Pas de blabla générique.
+
+Réponds dans ce format exact :
+
+🎬 CE QUE JE VOIS :
+[Analyse précise du contenu visuel — ambiance, sujet, style, émotion]
 
 📝 DESCRIPTION OPTIMISÉE :
-[Description parfaite adaptée au contenu]
+[Description qui crée une émotion forte, donne envie de commenter, avec les bons mots-clés TikTok]
 
-#️⃣ HASHTAGS :
-[15-20 hashtags ultra-ciblés]
+#️⃣ HASHTAGS (du plus viral au plus niche) :
+[20 hashtags classés : 5 mega-viraux + 8 ciblés niche + 7 micro-niche]
 
 ⏰ HEURE DE POST IDÉALE :
-[Heure + explication]
+[Heure précise + raison psychologique basée sur le comportement de l'audience cible]
 
-🎯 HOOK SUGGÉRÉ :
-[Phrase d'accroche pour les 3 premières secondes]
+🎯 HOOK — LES 3 PREMIÈRES SECONDES :
+[Phrase exacte à dire ou afficher pour stopper le scroll. Doit créer un choc ou une curiosité irrésistible]
 
-📊 POTENTIEL VIRAL :
-[Score /100 + explication détaillée basée sur le contenu]
+📊 SCORE DE POTENTIEL VIRAL : [X/100]
+[Explication détaillée : ce qui va marcher, ce qui pourrait freiner]
 
-💡 3 CONSEILS POUR MAXIMISER LES VUES :
-[3 conseils spécifiques au contenu analysé]`;
+💡 3 ACTIONS CONCRÈTES POUR MAXIMISER LES VUES :
+1. [Action ultra-spécifique]
+2. [Action ultra-spécifique]
+3. [Action ultra-spécifique]`;
 
+  // ============================================================
   // MODE: HOOKS
+  // ============================================================
   } else if (mode === 'hooks') {
-    prompt = `Tu es un expert en copywriting viral TikTok. Génère 5 hooks irrésistibles pour une vidéo TikTok sur "${sujet}" dans la niche "${niche}".
-Type de hook demandé : "${type}".
+    prompt = `Tu es le copywriter numéro 1 de TikTok FR. Tu connais exactement ce qui arrête le scroll et ce qui fait exploser le temps de visionnage.
 
-Les hooks doivent :
-- Durer 3-5 secondes à l'oral
-- Créer une curiosité immédiate ou un choc émotionnel
-- Donner envie de continuer à regarder
+Génère 5 hooks DÉVASTATEURS pour une vidéo TikTok sur "${sujet}" dans la niche "${niche}".
+Type de hook : "${type}"
 
-Format : numérote chaque hook de 1 à 5, avec une ligne vide entre chaque.`;
+RÈGLES D'OR :
+- Chaque hook doit être dit en moins de 4 secondes
+- Doit créer une ÉMOTION IMMÉDIATE (curiosité, choc, peur de rater quelque chose, identification)
+- Interdit : commencer par "Je", "Bonjour", "Dans cette vidéo"
+- Autorisé : chiffres chocs, questions provocatrices, affirmations controversées, mises en scène
 
+Format :
+
+🎯 HOOK 1 — [TYPE]
+"[Le hook exact, mot pour mot]"
+→ Pourquoi ça marche : [explication courte]
+
+🎯 HOOK 2 — [TYPE]
+"[Le hook exact]"
+→ Pourquoi ça marche : [explication courte]
+
+🎯 HOOK 3 — [TYPE]
+"[Le hook exact]"
+→ Pourquoi ça marche : [explication courte]
+
+🎯 HOOK 4 — [TYPE]
+"[Le hook exact]"
+→ Pourquoi ça marche : [explication courte]
+
+🎯 HOOK 5 — [TYPE]
+"[Le hook exact]"
+→ Pourquoi ça marche : [explication courte]
+
+⚡ LE MEILLEUR POUR TOI : Hook [numéro] — [raison]`;
+
+  // ============================================================
   // MODE: CALENDAR
+  // ============================================================
   } else if (mode === 'calendar') {
-    prompt = `Tu es un stratège de contenu TikTok expert. Génère un planning de contenu pour 7 jours pour un créateur dans la niche "${niche}" avec l'objectif : "${objectif}".
+    prompt = `Tu es un stratège de contenu TikTok d'élite. Tu crées des plannings qui génèrent des millions de vues.
+
+Crée un planning de contenu TikTok sur 7 jours pour la niche "${niche}" avec l'objectif : "${objectif}".
+
+Chaque jour doit avoir un thème différent qui s'enchaîne logiquement pour créer une audience fidèle.
 
 Format pour chaque jour :
 
-📅 LUNDI — [TITRE DE LA VIDÉO]
-Sujet : [description courte]
-Hook : [accroche 3 secondes]
-Description : [2 phrases + 5 hashtags clés]
-⏰ Heure de post : [heure optimale]
+━━━━━━━━━━━━━━━━━━━━━━
+📅 [JOUR] — [THÈME DU JOUR]
+━━━━━━━━━━━━━━━━━━━━━━
+🎬 Titre : [Titre accrocheur de la vidéo]
+🎯 Hook : "[Phrase d'accroche exacte pour les 3 premières secondes]"
+📝 Description : [2-3 phrases optimisées + appel à l'action]
+#️⃣ Top 5 hashtags : [les 5 hashtags les plus importants]
+⏰ Heure optimale : [heure précise]
+📊 Potentiel : [Faible/Moyen/Fort/Viral] — [raison en 1 phrase]
 
-[Même format pour Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche]
+[Répète pour les 7 jours]
 
-💡 STRATÉGIE DE LA SEMAINE :
-[1 conseil clé pour atteindre l'objectif]`;
+━━━━━━━━━━━━━━━━━━━━━━
+🚀 STRATÉGIE GLOBALE DE LA SEMAINE :
+[Conseil clé pour maximiser la cohérence et la croissance]
+━━━━━━━━━━━━━━━━━━━━━━`;
 
+  // ============================================================
   // MODE: ANALYZE DESCRIPTION
+  // ============================================================
   } else if (mode === 'analyze') {
-    prompt = `Tu es un expert en optimisation de contenu TikTok. Analyse cette description TikTok pour la niche "${niche}" et donne un feedback détaillé.
+    prompt = `Tu es un auditeur expert en optimisation TikTok. Tu analyses des descriptions avec une précision chirurgicale.
 
-Description à analyser :
+Analyse cette description TikTok pour la niche "${niche}" :
+
 "${text}"
 
-Format de réponse :
+Sois honnête, direct, et ultra-concret. Pas de compliments inutiles.
 
 📊 SCORE GLOBAL : [X/100]
 
+━━━ ANALYSE DÉTAILLÉE ━━━
+
 ✅ CE QUI EST BON :
-[Points positifs]
+[Points positifs avec explication du pourquoi]
 
-❌ CE QUI MANQUE :
-[Points à améliorer]
+❌ CE QUI COULE TA VIDÉO :
+[Problèmes précis qui réduisent les vues — sois brutal et honnête]
 
-🎯 HASHTAGS MANQUANTS :
-[Hashtags importants non utilisés]
+🔍 ANALYSE DES HASHTAGS :
+- Trop génériques : [liste]
+- Bien ciblés : [liste]
+- Manquants et importants : [liste]
+
+📈 ANALYSE DE L'ALGORITHME :
+[Comment l'algorithme TikTok va traiter cette description — mots-clés détectés, score SEO]
 
 ✨ VERSION AMÉLIORÉE :
-[Réécriture optimisée de la description]
+[Réécriture complète, optimisée à 100%]
 
-💡 CONSEIL PRINCIPAL :
-[Le conseil le plus important pour améliorer les performances]`;
+💡 LES 3 CHANGEMENTS QUI FERONT LA DIFFÉRENCE :
+1. [Changement précis + impact estimé]
+2. [Changement précis + impact estimé]
+3. [Changement précis + impact estimé]`;
 
+  // ============================================================
   // MODE: PRO GENERATOR
+  // ============================================================
   } else if (pro) {
-    const longueurInstruction = longueur === 'courte' ? '1 phrase courte et percutante' : longueur === 'longue' ? '4 à 5 phrases développées' : '2 à 3 phrases équilibrées';
-    const emojiInstruction = emojis === 'non' ? 'sans aucun emoji' : emojis === 'beaucoup' ? 'avec énormément d\'emojis (au moins 1 par phrase)' : 'avec quelques emojis bien placés';
-    const ctaMap = { follow: 'Termine par un appel à s\'abonner.', comment: 'Termine par une question engageante pour faire commenter.', partage: 'Termine par un appel au partage.', lien: 'Mentionne un lien en bio.', aucun: '' };
-    const ctaInstruction = ctaMap[cta] || '';
+    const longueurInstruction = longueur === 'courte'
+      ? 'UNE SEULE phrase ultra-percutante de maximum 15 mots — chaque mot doit compter'
+      : longueur === 'longue'
+      ? '4 à 5 phrases qui racontent une mini-histoire et créent de l\'émotion'
+      : '2 à 3 phrases équilibrées — accroche + valeur + action';
 
-    prompt = `Tu es un expert en croissance TikTok et en copywriting viral. Génère une description TikTok ultra-optimisée en ${langue} pour une vidéo de niche "${niche}" sur le sujet "${sujet}" avec un ton "${ton}".
+    const emojiInstruction = emojis === 'non'
+      ? 'ZÉRO emoji — style épuré et professionnel'
+      : emojis === 'beaucoup'
+      ? 'emojis PARTOUT — au moins 2 par phrase, style énergie maximale'
+      : '1-2 emojis stratégiques — placés pour amplifier l\'émotion';
 
-CONTRAINTES :
-- Description : ${longueurInstruction}
+    const ctaMap = {
+      follow: 'Termine par un appel à s\'abonner IRRÉSISTIBLE — pas juste "abonne-toi", crée une raison.',
+      comment: 'Termine par une QUESTION qui divise l\'opinion ou crée un débat — le but est de déclencher des commentaires.',
+      partage: 'Termine par un appel au partage ÉMOTIONNEL — "envoie ça à quelqu\'un qui en a besoin".',
+      lien: 'Mentionne le lien en bio de façon naturelle et intrigante.',
+      aucun: 'Pas d\'appel à l\'action — laisse le contenu parler.'
+    };
+
+    prompt = `Tu es le ghostwriter TikTok numéro 1 en ${langue}. Tes descriptions génèrent en moyenne 500k vues. Tu connais l'algorithme TikTok mieux que personne.
+
+Crée une description TikTok DÉVASTATRICE en ${langue} pour :
+- Niche : "${niche}"
+- Sujet : "${sujet}"
+- Ton : "${ton}"
+- Longueur : ${longueurInstruction}
 - Emojis : ${emojiInstruction}
-- ${ctaInstruction}
+- CTA : ${ctaMap[cta] || 'Pas d\'appel à l\'action.'}
+
+RÈGLES ABSOLUES :
+1. Chaque mot doit servir un but précis
+2. Le premier mot doit être un choc ou une question
+3. Les hashtags doivent être triés du plus viral au plus ciblé
+4. Le hook vidéo doit stopper le scroll en 0.5 secondes
+5. Le conseil doit être ACTIONNABLE aujourd'hui, pas demain
 
 Format EXACT :
 
 📝 DESCRIPTION :
-[La description]
+[La description selon les contraintes — elle doit donner des frissons]
 
-#️⃣ HASHTAGS :
-[15-20 hashtags ultra-ciblés]
+#️⃣ HASHTAGS (viral → niche → micro) :
+[20 hashtags ultra-ciblés et triés par puissance]
 
 ⏰ HEURE DE POST IDÉALE :
-[Heure précise + explication]
+[Heure précise + psychologie de l'audience à cette heure]
 
-🎯 HOOK VIDÉO SUGGÉRÉ :
-[1 phrase d'accroche pour les 3 premières secondes]
+🎯 HOOK — LES 3 PREMIÈRES SECONDES :
+[Phrase exacte, mot pour mot, qui stoppe le scroll]
 
-💡 CONSEIL PRO :
-[1 conseil actionnable et spécifique]
+💡 CONSEIL PRO DU JOUR :
+[1 conseil hyper-spécifique et actionnable pour maximiser les vues de CETTE vidéo]
 
-📊 MOTS-CLÉS SEO TIKTOK :
-[5-8 mots-clés à placer dans les commentaires]`;
+📊 MOTS-CLÉS SEO À PLACER EN COMMENTAIRE :
+[8 mots-clés à coller en premier commentaire pour booster le SEO TikTok]`;
 
-  // MODE: FREE GENERATOR
+  // ============================================================
+  // MODE: FREE GENERATOR (version premium pour la première impression)
+  // ============================================================
   } else {
-    prompt = `Tu es un expert en croissance TikTok. Génère une description TikTok optimisée en ${langue} pour une vidéo de niche "${niche}" sur le sujet "${sujet}" avec un ton "${ton}".
+    prompt = `Tu es le meilleur expert TikTok francophone. Cette personne teste ton outil pour la première fois — tu dois les ÉPATER. Donne le meilleur de toi-même.
 
-Format exact :
+Crée une description TikTok EXCEPTIONNELLE en ${langue} pour :
+- Niche : "${niche}"
+- Sujet : "${sujet}"
+- Ton : "${ton}"
+
+OBJECTIF : que l'utilisateur se dise "WOW, c'est exactement ce qu'il me faut !"
+
+Sois ultra-spécifique, ultra-percutant, ultra-pro.
+
+Format :
 
 📝 DESCRIPTION :
-[2-3 phrases accrocheuses]
+[Description qui crée une émotion forte — pas générique, hyper-spécifique au sujet]
 
-#️⃣ HASHTAGS :
-[10-15 hashtags ciblés]
+#️⃣ HASHTAGS (triés du plus viral au plus ciblé) :
+[15 hashtags puissants et bien choisis]
 
 ⏰ HEURE DE POST IDÉALE :
-[heure + explication]
+[Heure précise + raison psychologique basée sur l'audience de cette niche]
 
-💡 CONSEIL :
-[1 conseil actionnable]`;
+🎯 HOOK — LES 3 PREMIÈRES SECONDES :
+[La phrase exacte à dire ou afficher pour stopper le scroll immédiatement]
+
+💡 CONSEIL EXPERT :
+[1 conseil ultra-spécifique et actionnable pour que CETTE vidéo explose]`;
   }
 
   try {
-    let requestBody;
-
-    if (useVision && imageData) {
-      // Use Claude API for vision
+    if (mode === 'video' && base64) {
+      // Claude API for vision
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -167,7 +262,7 @@ Format exact :
           messages: [{
             role: 'user',
             content: [
-              { type: 'image', source: { type: 'base64', media_type: mediaType || 'image/jpeg', data: imageData } },
+              { type: 'image', source: { type: 'base64', media_type: mediaType || 'image/jpeg', data: base64 } },
               { type: 'text', text: prompt }
             ]
           }]
@@ -176,7 +271,7 @@ Format exact :
       const data = await response.json();
       return res.status(200).json({ result: data.content[0].text });
     } else {
-      // Use Groq for text
+      // Groq for text
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -185,8 +280,15 @@ Format exact :
         },
         body: JSON.stringify({
           model: 'llama-3.3-70b-versatile',
-          max_tokens: mode === 'calendar' ? 2000 : 1200,
-          messages: [{ role: 'user', content: prompt }]
+          max_tokens: mode === 'calendar' ? 2500 : mode === 'analyze' || mode === 'hooks' ? 1500 : 1200,
+          temperature: 0.85,
+          messages: [
+            {
+              role: 'system',
+              content: 'Tu es un expert TikTok d\'élite. Tu réponds toujours en français sauf si une autre langue est demandée. Tes réponses sont précises, concrètes, et actionnables. Tu ne donnes jamais de conseils génériques.'
+            },
+            { role: 'user', content: prompt }
+          ]
         })
       });
       const data = await response.json();
