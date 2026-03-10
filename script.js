@@ -615,8 +615,10 @@ async function animateLiveCounter(){
   if(!el)return;
   try{
     const {count}=await sb.from('profiles').select('*',{count:'exact',head:true});
-    el.textContent=(count||0).toLocaleString('fr-FR');
-  }catch(e){el.textContent='500+';}
+    const real=count||0;
+    const display=real+100;
+    el.textContent=display.toLocaleString('fr-FR');
+  }catch(e){el.textContent='100';}
 }
 
 // ── SOCIAL PROOF TOASTS ────────────────────────────────────────
