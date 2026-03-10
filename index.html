@@ -626,7 +626,7 @@
 <footer>
   <div class="logo">Tok<span>Description</span></div>
   <p>© 2026 TokDescription. Tous droits réservés.</p>
-  <div style="display:flex;gap:24px;"><a href="mailto:elies.dapoigny@gmail.com">Support</a><a onclick="showPage('pageCGU')" style="cursor:pointer;">CGU</a><a onclick="showPage('pagePrivacy')" style="cursor:pointer;">Confidentialite</a></div>
+  <div style="display:flex;gap:24px;"><a href="/cdn-cgi/l/email-protection#12777e7b77613c7673627d7b757c6b52757f737b7e3c717d7f">Support</a><a onclick="showPage('pageCGU')" style="cursor:pointer;">CGU</a><a onclick="showPage('pagePrivacy')" style="cursor:pointer;">Confidentialite</a></div>
 </footer>
 </div>
 
@@ -1151,7 +1151,7 @@
     <p style="color:var(--muted);line-height:1.8;">Vous pouvez resilier votre abonnement a tout moment en contactant le support. La resiliation prend effet a la fin de la periode en cours.</p>
 
     <h2 style="font-size:1.2rem;margin:28px 0 12px;">7. Contact</h2>
-    <p style="color:var(--muted);line-height:1.8;">Pour toute question : <a href="mailto:elies.dapoigny@gmail.com" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="ef8a83868a9cc18b8e9f8086888196af88828e8683c18c8082">[email&#160;protected]</span></a></p>
+    <p style="color:var(--muted);line-height:1.8;">Pour toute question : <a href="/cdn-cgi/l/email-protection#46232a2f233568222736292f21283f06212b272f2a6825292b" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="ef8a83868a9cc18b8e9f8086888196af88828e8683c18c8082">[email&#160;protected]</span></a></p>
 
     <button class="gen-btn" onclick="showPage('home')" style="margin-top:40px;max-width:200px;">Retour a l accueil</button>
   </div>
@@ -1176,10 +1176,10 @@
     <p style="color:var(--muted);line-height:1.8;">Nous utilisons uniquement des cookies essentiels au fonctionnement du service (session d authentification). Aucun cookie publicitaire.</p>
 
     <h2 style="font-size:1.2rem;margin:28px 0 12px;">5. Vos droits (RGPD)</h2>
-    <p style="color:var(--muted);line-height:1.8;">Conformement au RGPD, vous avez le droit d acces, de rectification et de suppression de vos donnees. Contactez-nous a <a href="mailto:elies.dapoigny@gmail.com" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="a8cdc4c1cddb86ccc9d8c7c1cfc6d1e8cfc5c9c1c486cbc7c5">[email&#160;protected]</span></a> pour exercer ces droits.</p>
+    <p style="color:var(--muted);line-height:1.8;">Conformement au RGPD, vous avez le droit d acces, de rectification et de suppression de vos donnees. Contactez-nous a <a href="/cdn-cgi/l/email-protection#f590999c9086db9194859a9c929b8cb59298949c99db969a98" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="a8cdc4c1cddb86ccc9d8c7c1cfc6d1e8cfc5c9c1c486cbc7c5">[email&#160;protected]</span></a> pour exercer ces droits.</p>
 
     <h2 style="font-size:1.2rem;margin:28px 0 12px;">6. Contact DPO</h2>
-    <p style="color:var(--muted);line-height:1.8;">Responsable du traitement : TokDescription — <a href="mailto:elies.dapoigny@gmail.com" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="0d686164687e23696c7d62646a63744d6a606c6461236e6260">[email&#160;protected]</span></a></p>
+    <p style="color:var(--muted);line-height:1.8;">Responsable du traitement : TokDescription — <a href="/cdn-cgi/l/email-protection#3451585d51471a5055445b5d535a4d745359555d581a575b59" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="0d686164687e23696c7d62646a63744d6a606c6461236e6260">[email&#160;protected]</span></a></p>
 
     <button class="gen-btn" onclick="showPage('home')" style="margin-top:40px;max-width:200px;">Retour a l accueil</button>
   </div>
@@ -1198,9 +1198,20 @@
       <input type="email" placeholder="Email" id="sEmail" autocomplete="off" />
       <input type="password" placeholder="Mot de passe (min. 6 caractères)" id="sPass" />
       <button class="modal-btn" onclick="handleSignup()">Créer mon compte →</button>
-      <div class="modal-switch">Déjà un compte ? <a onclick="switchModal('login')">Se connecter</a></div>
+      <div class="modal-switch">Déjà un compte ? <a onclick="switchModal('login'')">Se connecter</a></div>
     </div>
     <div id="mLogin" style="display:none">
       <h2>Connexion</h2>
       <p class="modal-sub">Content de te revoir !</p>
-      <div class="m-err" id="
+      <div class="m-err" id="lErr"></div>
+      <input type="email" placeholder="Email" id="lEmail" autocomplete="off" />
+      <input type="password" placeholder="Mot de passe" id="lPass" />
+      <button class="modal-btn" onclick="handleLogin()">Se connecter →</button>
+      <div class="modal-switch">Pas encore de compte ? <a onclick="switchModal('signup')">Créer un compte</a></div>
+    </div>
+  </div>
+</div>
+
+<script src="/script.js"></script>
+</body>
+</html>
