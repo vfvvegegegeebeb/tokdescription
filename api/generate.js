@@ -5,7 +5,8 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { mode, niche, sujet, langue, ton, longueur, emojis, cta, pro, base64, mediaType, context, type, text, objectif } = req.body;
+  const body = req.body;
+  const { mode, niche, sujet, langue, ton, longueur, emojis, cta, pro, base64, mediaType, context, type, text, objectif, duree, style, pseudo, followers, views, probleme, desc, valeur } = body;
 
   let prompt = '';
 
