@@ -214,6 +214,51 @@ Format EXACT :
 [8 mots-clés à coller en premier commentaire pour booster le SEO TikTok]`;
 
   // ============================================================
+  // MODE: SCRIPT GENERATOR
+  // ============================================================
+  } else if (mode === 'script') {
+    const dureeLabel = duree === '30' ? '30 secondes (environ 75 mots à l'oral)' : duree === '60' ? '1 minute (environ 150 mots)' : duree === '180' ? '3 minutes (environ 450 mots)' : '5 minutes (environ 750 mots)';
+    prompt = `Tu es le meilleur scénariste de contenu TikTok au monde. Tu as écrit des scripts pour des créateurs avec des millions d'abonnés.
+
+Génère un script TikTok COMPLET et PRÊT À TOURNER en ${langue || 'français'} pour :
+- Niche : "${niche || 'générale'}"
+- Sujet : "${sujet}"
+- Durée : ${dureeLabel}
+- Style : ${style || 'éducatif'}
+- Ton : ${ton || 'naturel'}
+
+RÈGLES ABSOLUES :
+- Le script doit être dit EXACTEMENT tel quel, mot pour mot
+- Chaque section doit avoir sa durée estimée
+- Les transitions doivent être claires et naturelles
+- Le hook doit stopper le scroll en moins de 3 secondes
+- Pas de blabla inutile — chaque mot doit servir un but
+
+Format EXACT :
+
+🎬 HOOK — [0 à 3 secondes]
+"[Phrase d'accroche exacte — provoc, chiffre choc ou question irrésistible]"
+[Indication visuelle : ce qui doit apparaître à l'écran]
+
+⚡ TRANSITION
+[Comment enchaîner vers le développement]
+
+📖 DÉVELOPPEMENT — [durée estimée]
+[Le corps du script structuré en points clés, avec les transitions entre chaque]
+
+🎯 CONCLUSION + CALL TO ACTION — [dernières secondes]
+"[Phrase de conclusion percutante + appel à l'action naturel]"
+
+📋 NOTES DE TOURNAGE :
+- Décor suggéré : [suggestion]
+- Énergie : [niveau d'énergie recommandé]
+- Sous-titres : [conseils pour les sous-titres]
+- Musique : [type de musique de fond suggéré]
+
+#️⃣ HASHTAGS POUR CETTE VIDÉO :
+[15 hashtags ultra-ciblés]`;
+
+  // ============================================================
   // MODE: FREE GENERATOR (version premium pour la première impression)
   // ============================================================
   } else {
